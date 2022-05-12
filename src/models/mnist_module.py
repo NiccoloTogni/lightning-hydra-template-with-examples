@@ -24,7 +24,7 @@ class MNISTLitModule(LightningModule):
 
     def __init__(
         self,
-        net: torch.nn.Module,
+        net: SimpleDenseNet,
         lr: float = 0.001,
         weight_decay: float = 0.0005,
     ):

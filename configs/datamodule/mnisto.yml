@@ -1,0 +1,9 @@
+_target_: src/datamodules/mnist_datamodule.MNISTDataModule
+batch_size: 64
+data_dir: data/
+num_workers: 0
+pin_memory: false
+train_val_test_split: !!python/tuple
+- 55000
+- 5000
+- 10000

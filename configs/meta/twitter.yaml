@@ -1,0 +1,23 @@
+
+# disable logging
+hydra:
+  run:
+    dir: .
+  output_subdir: null
+  job_logging: disabled
+  hydra_logging: disabled
+
+mode: train # train or test
+experiment: false # if true congiguration is generated in a single experiment file
+
+name: mnist
+config_name: my_${name}
+
+model_file: ${name}_module
+datamodule_file: ${name}_datamodule
+
+model_class: null  # if null will be deduced (file must contain only one class)
+datamodule_class: null # if null will be deduced (file must contain only one class)
+
+logger:
+  - tensorboard
