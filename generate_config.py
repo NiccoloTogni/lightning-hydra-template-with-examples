@@ -17,21 +17,19 @@ def main():
     args = parser.parse_args()
 
     model_config = {}
-    recursively_update_class_arguments(model_config, args.model.split('.')[0])
+    update_class_arguments(model_config, args.model.split('.')[0])
 
     datamodule_config = {}
-    recursively_update_class_arguments(datamodule_config, args.datamodule.split('.')[0])
+    update_class_arguments(datamodule_config, args.datamodule.split('.')[0])
 
-    with open(f'configs/model/{args.name}.yml', 'w') as outfile:
+    with open(f'configs/model/{args.name}.yaml', 'w') as outfile:
         yaml.dump(model_config, outfile, default_flow_style=False)
 
-    with open(f'configs/datamodule/{args.name}.yml', 'w') as outfile:
+    with open(f'configs/datamodule/{args.name}.yaml', 'w') as outfile:
         yaml.dump(datamodule_config, outfile, default_flow_style=False)
 
 
-
-
-def recursively_update_class_arguments(argument_dict, module, class_name=None, prefix='', add_target=True):
+def update_class_arguments(argument_dict, module, class_name=None, prefix='', add_target=True):
     with open(prefix + module.replace('.', '/') + '.py', "r") as source:
         tree = ast.parse(source.read())
 
@@ -47,7 +45,7 @@ def recursively_update_class_arguments(argument_dict, module, class_name=None, p
     
     if class_ is not None:
         if add_target:
-            argument_dict['_target_'] = f'{module}.{class_name}'
+            argument_dict['_target_'] = f'{module}.{class_name}'.replace('/', '.')
         init = next((n for n in class_.body if isinstance(n, ast.FunctionDef) and n.name == '__init__'))
         if init is None:
             return
@@ -58,7 +56,7 @@ def recursively_update_class_arguments(argument_dict, module, class_name=None, p
         for arg, dft, ann in zip(args, defaults, annotations):
             if dft == '???' and ann is not None and import_dict.get(ann) is not None:
                 argument_dict[arg.arg] = {}
-                recursively_update_class_arguments(argument_dict[arg.arg], import_dict[ann], ann)
+                update_class_arguments(argument_dict[arg.arg], import_dict[ann], ann)
             else:
                 argument_dict[arg.arg] = dft
 

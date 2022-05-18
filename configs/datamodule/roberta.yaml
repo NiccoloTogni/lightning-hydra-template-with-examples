@@ -1,0 +1,8 @@
+_target_: src.datamodules.text_datamodule.TextDataModule
+batch_size: 64
+block_size: 256
+data_dir: ${original_work_dir}/data/roberta
+num_classes: null
+num_workers: 0
+pin_memory: false
+tokenizer_name: microsoft/codebert-base
